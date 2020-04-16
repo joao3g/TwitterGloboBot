@@ -1,5 +1,14 @@
 console.log('Loading ... \n')
+const Twit = require('twit')
 const axios = require('axios');
+ 
+var T = new Twit({
+  consumer_key:         'qDgZNWtBdYwg4JvnVXZ5qgK2x',
+  consumer_secret:      'ZETbdusPXWNRUlWP2L3pxSBmlul4kvCzK7A8iL3F1fDFr8aGpM',
+  access_token:         '1250596373864624128-9K2lW5AJi4Ye4whfNal41bJmiBjnzR',
+  access_token_secret:  '7TL3eJzXKIVf2Nv7DiGUl6EoUm5WmwgdgzRf98AsoQdlf',
+})
+
 
 var today = new Date()
 
@@ -14,7 +23,7 @@ async function AxiosRequest(){
 	for(i in filter){
 		filterArray[i] = filter[i].split('</div>')
 	}
-
+	
 	list = []
 
 	for(i in filterArray){
@@ -31,32 +40,38 @@ async function AxiosRequest(){
 			dataEndTime = parseInt(dataEndTime[0])
 
 			date = new Date(dataStartTime * 1000)
-
+			
 			if((date.getDate()) == (today.getDate())){
 				title = filterString.split(`<h2>`)
 				title = title[1].split(`</h2>`)
 				title = String(title[0])
-
+				
 				let startHours = date.getUTCHours()-3
+				startHours == -3 ? startHours = 21 : null
+				startHours == -2 ? startHours = 22 : null
+				startHours == -1 ? startHours = 23 : null
 				if((String(startHours).length) == 1 ){
 					startHours = `0${startHours}`
 				}
-
+				
 				let startMinutes = date.getMinutes()
 				if((String(startMinutes).length) == 1 ){
 					startMinutes = `0${startMinutes}`
 				}
-
+				
 				let startSeconds = date.getSeconds()
 				if((String(startSeconds).length) == 1 ){
 					startSeconds = `0${startSeconds}`
 				}
 
-				let start = `${startHours}:${startMinutes}:${startSeconds}`
+				let start = `${startHours}:${startMinutes}`
 
 				date = new Date(dataEndTime * 1000)
-
+				
 				let endHours = date.getUTCHours()-3
+				endHours == -3 ? endHours = 21 : null
+				endHours == -2 ? endHours = 22 : null
+				endHours == -1 ? endHours = 23 : null
 				if((String(endHours).length) == 1 ){
 					endHours = `0${endHours}`
 				}
@@ -65,49 +80,79 @@ async function AxiosRequest(){
 				if((String(endMinutes).length) == 1 ){
 					endMinutes = `0${endMinutes}`
 				}
-
+				
 				let endSeconds = date.getSeconds()
 				if((String(endSeconds).length) == 1 ){
 					endSeconds = `0${endSeconds}`
 				}
+				
+				let end = `${endHours}:${endMinutes}`
 
-				let end = `${endHours}:${endMinutes}:${endSeconds}`
-
-
+				
 				list.push({ title, start, end })
 			}
-
+			
 		}
 	}
-
+	
 	return list
-
+	
 }
+AxiosRequest().then(function (response){ 
 
-AxiosRequest().then(res => console.log(res))
+	var part1 = ['Programação da Globo MG de hoje: \n\n']
+	var part2 = ['Continuação: \n\n']
+	var part3 = ['Continuação: \n\n']
+	
+	divided = parseInt(parseInt(response.length) / 3)
+	all = parseInt(response.length)
 
-// var res = [
-// 	{ title: 'Hora Um', hours: '04:00' },
-// 	{ title: 'Bom Dia Minas', hours: '06:00' },
-// 	{ title: 'Bom Dia Brasil', hours: '08:30' },
-// 	{ title: 'Combate ao Coronavírus', hours: '10:00' },
-// 	{ title: 'MG1', hours: '12:00' },
-// 	{ title: 'Jornal Hoje', hours: '13:25' },
-// 	{ title: 'Sessão da Tarde - Casamento Grego 2', hours: '14:56' },
-// 	{ title: 'Vale a Pena Ver de Novo - Avenida Brasil', hours: '16:39' },
-// 	{ title: 'Malhação - Viva a Diferença', hours: '17:51' },
-// 	{ title: 'Novo Mundo', hours: '18:26' },
-// 	{ title: 'MG2', hours: '19:03' },
-// 	{ title: 'Totalmente Demais', hours: '19:34' },
-// 	{ title: 'Jornal Nacional', hours: '20:30' },
-// 	{ title: 'Fina Estampa', hours: '21:36' },
-// 	{ title: 'Big Brother Brasil 20', hours: '22:41' },
-// 	{ title: 'Cinema Especial - Vai Que Cola - O Filme', hours: '23:15' },
-// 	{ title: 'Jornal da Globo', hours: '00:37' },
-// 	{ title: 'Perception: Truques da Mente ', hours: '01:33' },
-// 	{ title: 'Corujão I - Uma Canção', hours: '02:20' }
-//   ]
+	for(i = 0; i <= divided; i++){
+		part1.push(`${response[i].start} : ${response[i].title}\n`) 
+	}
 
-// for(i in res){
-// 	console.log(res[i].title)
-// }
+	for(j = (divided+1); j <= (divided * 2); j++){
+		part2.push(`${response[j].start} : ${response[j].title}\n`)
+	}
+
+	for(k = (divided*2+1); k <= (all-1); k++){
+		part3.push(`${response[k].start} : ${response[k].title}\n`)
+	}
+
+	part1 = part1.join('')
+	part2 = part2.join('')
+	part3 = part3.join('')
+
+	console.log(part1+'\n')
+	console.log(part2+'\n')
+	console.log(part3)
+
+	T.post('statuses/update', { 
+
+		status: part1
+		
+	}, function(err, data, response) {
+
+		console.log(err)
+		part1Id = data.id_str
+		
+		T.post('statuses/update', { 
+			
+			status: part2,
+			in_reply_to_status_id: '' + part1Id
+			
+		}, function(err, data, response) {
+			
+			console.log(err)
+			part2Id = data.id_str
+			T.post('statuses/update', { 
+	
+				status: part3,
+				in_reply_to_status_id: '' + part2Id
+				
+			}, function(err){
+				console.log(err)
+			})
+		})
+	})
+})
