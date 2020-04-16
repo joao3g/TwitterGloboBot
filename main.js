@@ -185,29 +185,28 @@ async function PostTweet(){
 			}, function(err, data, response) {
 		
 				console.log(err)
-				if(err){
-					break
-				}
 				part1Id = data.id_str
 				
-				T.post('statuses/update', { 
-					
-					status: part2,
-					in_reply_to_status_id: '' + part1Id
-					
-				}, function(err, data, response) {
-					
-					console.log(err)
-					part2Id = data.id_str
+				if(!err){
 					T.post('statuses/update', { 
-			
-						status: part3,
-						in_reply_to_status_id: '' + part2Id
 						
-					}, function(err){
+						status: part2,
+						in_reply_to_status_id: '' + part1Id
+						
+					}, function(err, data, response) {
+						
 						console.log(err)
+						part2Id = data.id_str
+						T.post('statuses/update', { 
+				
+							status: part3,
+							in_reply_to_status_id: '' + part2Id
+							
+						}, function(err){
+							console.log(err)
+						})
 					})
-				})
+				}
 			})
 		
 		})
