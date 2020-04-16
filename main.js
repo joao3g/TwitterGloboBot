@@ -53,8 +53,7 @@ async function AxiosRequest(){
 			}
 			
 			if((dateDay) == (todayDay)){
-				console.log('UTCDate: ', (date.getUTCDate()))
-				console.log('TodayDate: ', todayDay, '\n')
+
 				title = filterString.split(`<h2>`)
 				title = title[1].split(`</h2>`)
 				title = String(title[0])
@@ -107,8 +106,7 @@ async function AxiosRequest(){
 			
 		}
 	}
-	
-	console.log(list)
+
 	return list
 	
 }
@@ -120,7 +118,7 @@ function timeout(ms) {
 
 async function PostTweet(){
 
-	// while(true){
+	while(true){
 
 		today = new Date()
 
@@ -180,41 +178,41 @@ async function PostTweet(){
 			part2 = part2.join('')
 			part3 = part3.join('')
 		
-			// await T.post('statuses/update', { 
+			await T.post('statuses/update', { 
 		
-			// 	status: part1
+				status: part1
 				
-			// }, function(err, data, response) {
+			}, function(err, data, response) {
 		
-			// 	console.log(err)
-			// 	part1Id = data.id_str
+				console.log(err)
+				part1Id = data.id_str
 				
-			// 	T.post('statuses/update', { 
+				T.post('statuses/update', { 
 					
-			// 		status: part2,
-			// 		in_reply_to_status_id: '' + part1Id
+					status: part2,
+					in_reply_to_status_id: '' + part1Id
 					
-			// 	}, function(err, data, response) {
+				}, function(err, data, response) {
 					
-			// 		console.log(err)
-			// 		part2Id = data.id_str
-			// 		T.post('statuses/update', { 
+					console.log(err)
+					part2Id = data.id_str
+					T.post('statuses/update', { 
 			
-			// 			status: part3,
-			// 			in_reply_to_status_id: '' + part2Id
+						status: part3,
+						in_reply_to_status_id: '' + part2Id
 						
-			// 		}, function(err){
-			// 			console.log(err)
-			// 		})
-			// 	})
-			// })
+					}, function(err){
+						console.log(err)
+					})
+				})
+			})
 		
 		})
 
 		console.log('Waiting ...')
 		await timeout(86400000)
 
-	// }
+	}
 }
 
 PostTweet()
