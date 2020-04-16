@@ -185,6 +185,9 @@ async function PostTweet(){
 			}, function(err, data, response) {
 		
 				console.log(err)
+				if(err){
+					break
+				}
 				part1Id = data.id_str
 				
 				T.post('statuses/update', { 
