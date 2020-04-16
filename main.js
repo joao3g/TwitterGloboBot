@@ -23,11 +23,10 @@ async function AxiosRequest(){
 	for(i in filter){
 		filterArray[i] = filter[i].split('</div>')
 	}
-	
+
 	list = []
 
 	for(i in filterArray){
-		console.log(filterArray[i][0])
 		if(filterArray[i][0].includes("<h2>")){
 
 			filterString = filterArray[i][0]
@@ -48,7 +47,7 @@ async function AxiosRequest(){
 				todayDay = today.getUTCDate()-1
 			}
 			
-			if((date.getDate()) == (todayDay)){
+			if((date.getUTCDate()) == (todayDay)){
 				title = filterString.split(`<h2>`)
 				title = title[1].split(`</h2>`)
 				title = String(title[0])
@@ -97,12 +96,12 @@ async function AxiosRequest(){
 
 				
 				list.push({ title, start, end })
-				// console.log(list)
 			}
 			
 		}
 	}
 	
+	console.log(list)
 	return list
 	
 }
@@ -206,7 +205,7 @@ async function PostTweet(){
 		})
 
 		console.log('Waiting ...')
-		// await timeout(86400000)
+		await timeout(86400000)
 
 	// }
 }
