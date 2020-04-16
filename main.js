@@ -42,12 +42,19 @@ async function AxiosRequest(){
 			date = new Date(dataStartTime * 1000)
 
 			todayDay = today.getUTCDate()
+			dateDay = date.getUTCDate()
+
+			if((date.getUTCHours()-3) < 0){
+				dateDay = date.getUTCDate()-1
+			}
 
 			if((today.getUTCHours()-3) < 0){
 				todayDay = today.getUTCDate()-1
 			}
 			
-			if((date.getUTCDate()) == (todayDay)){
+			if((dateDay) == (todayDay)){
+				console.log('UTCDate: ', (date.getUTCDate()))
+				console.log('TodayDate: ', todayDay, '\n')
 				title = filterString.split(`<h2>`)
 				title = title[1].split(`</h2>`)
 				title = String(title[0])
