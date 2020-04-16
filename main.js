@@ -178,7 +178,7 @@ async function PostTweet(){
 			part2 = part2.join('')
 			part3 = part3.join('')
 		
-			await T.post('statuses/update', { 
+			T.post('statuses/update', { 
 		
 				status: part1
 				
