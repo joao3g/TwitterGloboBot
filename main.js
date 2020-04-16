@@ -27,6 +27,7 @@ async function AxiosRequest(){
 	list = []
 
 	for(i in filterArray){
+		console.log(filterArray[i][0])
 		if(filterArray[i][0].includes("<h2>")){
 
 			filterString = filterArray[i][0]
@@ -96,7 +97,7 @@ async function AxiosRequest(){
 
 				
 				list.push({ title, start, end })
-				console.log(list)
+				// console.log(list)
 			}
 			
 		}
@@ -113,7 +114,7 @@ function timeout(ms) {
 
 async function PostTweet(){
 
-	while(true){
+	// while(true){
 
 		today = new Date()
 
@@ -205,9 +206,9 @@ async function PostTweet(){
 		})
 
 		console.log('Waiting ...')
-		await timeout(86400000)
+		// await timeout(86400000)
 
-	}
+	// }
 }
 
 PostTweet()
