@@ -40,8 +40,14 @@ async function AxiosRequest(){
 			dataEndTime = parseInt(dataEndTime[0])
 
 			date = new Date(dataStartTime * 1000)
+
+			todayDay = today.getUTCDate()
+
+			if((today.getUTCHours()-3) < 0){
+				todayDay = today.getUTCDate()-1
+			}
 			
-			if((date.getDate()) == (today.getDate())){
+			if((date.getDate()) == (todayDay)){
 				title = filterString.split(`<h2>`)
 				title = title[1].split(`</h2>`)
 				title = String(title[0])
@@ -98,61 +104,109 @@ async function AxiosRequest(){
 	return list
 	
 }
-AxiosRequest().then(function (response){ 
 
-	var part1 = ['Programação da Globo MG de hoje: \n\n']
-	var part2 = ['Continuação: \n\n']
-	var part3 = ['Continuação: \n\n']
-	
-	divided = parseInt(parseInt(response.length) / 3)
-	all = parseInt(response.length)
+function timeout(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
-	for(i = 0; i <= divided; i++){
-		part1.push(`${response[i].start} : ${response[i].title}\n`) 
-	}
 
-	for(j = (divided+1); j <= (divided * 2); j++){
-		part2.push(`${response[j].start} : ${response[j].title}\n`)
-	}
+async function PostTweet(){
 
-	for(k = (divided*2+1); k <= (all-1); k++){
-		part3.push(`${response[k].start} : ${response[k].title}\n`)
-	}
+	while(true){
 
-	part1 = part1.join('')
-	part2 = part2.join('')
-	part3 = part3.join('')
+		today = new Date()
 
-	console.log(part1+'\n')
-	console.log(part2+'\n')
-	console.log(part3)
+		todayDay = today.getUTCDay()
+		if((today.getUTCHours()-3) < 0){
+			todayDay = today.getUTCDay()-1
+			if(todayDay < 0){
+				todayDay = 6
+			}
+		}
 
-	T.post('statuses/update', { 
+		if(todayDay == 0){
+			weekDay = 'Domingo'
+		}
+		if(todayDay == 1){
+			weekDay = 'Segunda-feira'
+		}
+		if(todayDay == 2){
+			weekDay = 'Terça-feira'
+		}
+		if(todayDay == 3){
+			weekDay = 'Quarta-feira'
+		}
+		if(todayDay == 4){
+			weekDay = 'Quinta-feira'
+		}
+		if(todayDay == 5){
+			weekDay = 'Sexta-feira'
+		}
+		if(todayDay == 6){
+			weekDay = 'Sábado'
+		}
 
-		status: part1
+
+		await AxiosRequest().then(async function (response){ 
 		
-	}, function(err, data, response) {
-
-		console.log(err)
-		part1Id = data.id_str
+			var part1 = [`Programação da Globo MG de hoje (${weekDay}): \n\n`]
+			var part2 = ['Continuação: \n\n']
+			var part3 = ['Continuação: \n\n']
+			
+			divided = parseInt(parseInt(response.length) / 3)
+			all = parseInt(response.length)
 		
-		T.post('statuses/update', { 
-			
-			status: part2,
-			in_reply_to_status_id: '' + part1Id
-			
-		}, function(err, data, response) {
-			
-			console.log(err)
-			part2Id = data.id_str
+			for(i = 0; i <= divided; i++){
+				part1.push(`${response[i].start} : ${response[i].title}\n`) 
+			}
+		
+			for(j = (divided+1); j <= (divided * 2); j++){
+				part2.push(`${response[j].start} : ${response[j].title}\n`)
+			}
+		
+			for(k = (divided*2+1); k <= (all-1); k++){
+				part3.push(`${response[k].start} : ${response[k].title}\n`)
+			}
+		
+			part1 = part1.join('')
+			part2 = part2.join('')
+			part3 = part3.join('')
+		
 			T.post('statuses/update', { 
-	
-				status: part3,
-				in_reply_to_status_id: '' + part2Id
+		
+				status: part1
 				
-			}, function(err){
+			}, function(err, data, response) {
+		
 				console.log(err)
+				part1Id = data.id_str
+				
+				T.post('statuses/update', { 
+					
+					status: part2,
+					in_reply_to_status_id: '' + part1Id
+					
+				}, function(err, data, response) {
+					
+					console.log(err)
+					part2Id = data.id_str
+					T.post('statuses/update', { 
+			
+						status: part3,
+						in_reply_to_status_id: '' + part2Id
+						
+					}, function(err){
+						console.log(err)
+					})
+				})
 			})
+		
 		})
-	})
-})
+
+		console.log('Waiting ...')
+		await timeout(86400000)
+
+	}
+}
+
+PostTweet()
