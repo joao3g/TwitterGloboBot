@@ -149,7 +149,6 @@ api.getMessage = async function makeMessage(){
 	
 	post = post.join('')
 
-	console.log(post)
 	return post
 }
 

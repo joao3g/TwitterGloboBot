@@ -3,7 +3,7 @@ const bot = require('./config/twitter');
 const api = require('./api');
 const CronJob = require('cron').CronJob;
 
-var job = new CronJob('00 55 00 * * *', function () {
+var job = new CronJob('00 30 00 * * *', function () {
 
     api.getMessage()
 	.then(res => bot.thread(res))

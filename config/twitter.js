@@ -36,7 +36,7 @@ post_promise('statuses/update', { status: `${first}` })
 
 cliente.thread = function Tweet(message){
     
-    console.log('Tweetando ...\n')
+    console.log('Tweetando ...')
     
     var messageArray = [message]
     
