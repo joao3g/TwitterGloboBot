@@ -13,7 +13,7 @@
   },
   "devDependencies": {},
   "scripts": {
-    "start": "node main.js",
+    "start": "node -r dotenv/config main.js dotenv_config_path=config.env",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "João Gabriel",

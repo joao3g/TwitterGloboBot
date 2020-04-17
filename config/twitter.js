@@ -120,11 +120,10 @@ cliente.thread = function Tweet(message){
                 
                 particionedTweet.splice(i,1)
                 particionedTweet = particionedTweet.concat(newAtual)
-                messageArray = particionedTweet;
             }
         }
     }
-    tweet(messageArray[0],messageArray)
+    tweet(particionedTweet[0],particionedTweet)
 }
 
 module.exports = cliente;
