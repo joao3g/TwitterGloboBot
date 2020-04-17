@@ -5,14 +5,17 @@
   "main": "main.js",
   "dependencies": {
     "axios": "^0.19.2",
+    "cron": "^1.8.2",
+    "dotenv": "^8.2.0",
     "request": "^2.88.2",
-    "twit": "^2.2.11"
+    "twitter": "^1.7.1",
+    "util": "^0.12.2"
   },
   "devDependencies": {},
   "scripts": {
     "start": "node main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "JotaGe",
+  "author": "João Gabriel",
   "license": "ISC"
 }
