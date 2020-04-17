@@ -3,5 +3,15 @@ const bot = require('./config/twitter');
 const api = require('./api');
 const CronJob = require('cron').CronJob;
 
-api.getMessage()
-.then(res => bot.thread(res))
+var job = new CronJob('0 0 0 * * *', function () {
+
+    api.getMessage()
+	.then(res => bot.thread(res))
+
+	console.log("JOB EXECUTED!")
+
+},
+    null,
+    true, //Ativa o job
+    'America/Sao_Paulo' //Fuso horário.
+);
